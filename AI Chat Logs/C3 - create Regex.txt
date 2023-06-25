@@ -1,0 +1,83 @@
+User
+Create the regex implementation code snippet according to the defined acceptance criteria. The code snippet should accept the string to match and return the Boolean matching result.  Acceptance criteria:
+
+Compose a C# .Net 6 library with public method with a single regular expression that successfully meets requirements below:  
+
+This regular expression should validate the maximum string length (passed as parameter); it should return a match if the string length is within the acceptable range and a non-match if it is not.  
+
+This regular expression should also validate that the string contains at least one uppercase letter, one lowercase letter, one digit, and one special character from a predefined list: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~. It should return a match if the criteria are met and a non-match if they are not.  
+
+This regular expression should validate that the string does not contain any whitespace characters (spaces, tabs, or newlines). This should return a non-match if any whitespace characters are found.  
+
+The regular expression should be optimized for execution speed and simplicity. The regular expression should still fulfill all the above criteria.  
+
+The regular expression should be tested in code on a variety of sample inputs and edge cases (10) to ensure the regex is functioning properly.  
+
+The regular expression should be implemented within the code in a way that it can be easily reused for various inputs.  
+
+Implementation should not introduce any unexpected behavior or bugs.  
+
+Clear and concise documentation should be provided for the regular expression, explaining how it works, and any caveats or limitations.   
+
+ChatGPT
+Here is a simple implementation of your request in C# .NET 6. This implementation uses a method IsStringValid() that accepts a string and maximum length as parameters, then uses a regular expression to validate the string based on the criteria you provided.
+
+csharp
+Copy code
+using System;
+using System.Text.RegularExpressions;
+
+public class StringValidator
+{
+    private const string SpecialCharacters = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+    public bool IsStringValid(string input, int maxLength)
+    {
+        if (string.IsNullOrEmpty(input) || input.Length > maxLength)
+            return false;
+
+        string pattern = $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[{SpecialCharacters}])[^\s]{{{maxLength}}}$";
+
+        return Regex.IsMatch(input, pattern);
+    }
+}
+The regular expression pattern in the code is explained as follows:
+
+^(?=.*[a-z]): Lookahead to ensure there is at least one lowercase letter.
+(?=.*[A-Z]): Lookahead to ensure there is at least one uppercase letter.
+(?=.*\\d): Lookahead to ensure there is at least one digit.
+(?=.*[{SpecialCharacters}]): Lookahead to ensure there is at least one special character from the predefined list.
+[^\s]{{{maxLength}}}$: Validate that the string does not contain any whitespace characters and has the correct length.
+To test the method with various inputs and edge cases, you might do something like this:
+
+csharp
+Copy code
+public static void Main()
+{
+    var validator = new StringValidator();
+    string[] testInputs = new string[]
+    {
+        "Valid1#",
+        "Invalid",
+        "invalid1#",
+        "INVALID1#",
+        "Valid1 #", 
+        "valid1valid1valid1valid1valid1valid1valid1valid1valid1valid1valid1valid1valid1valid1#",
+        "V1#",
+        "Vvvv1#",
+        "V1########",
+        ""
+    };
+
+    foreach (var input in testInputs)
+    {
+        Console.WriteLine($"'{input}' is {(validator.IsStringValid(input, 10) ? "valid" : "invalid")}.");
+    }
+}
+This example tests a variety of cases, including valid inputs, inputs missing various criteria (uppercase, lowercase, digit, special character, no whitespaces), and inputs exceeding the maximum length. It is simple to add more test cases to this example if necessary.
+
+Caveats and limitations:
+
+If the maximum length is too long, the regular expression may be slow to execute.
+The special character list is hard-coded in the class. If you need to change the list, you need to change the code.
+The method assumes that all inputs are single-line strings. If a string contains newline characters, it may not work as expected.
