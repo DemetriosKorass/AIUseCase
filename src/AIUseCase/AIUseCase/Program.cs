@@ -1,2 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using RegexLib;
+
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        var validator = new StringValidator();
+        var validatorTest = new StringValidatorTest(validator);
+
+        validatorTest.RunTests();
+    }
+}

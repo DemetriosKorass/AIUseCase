@@ -11,7 +11,7 @@ namespace RegexLib
             if (string.IsNullOrEmpty(input) || input.Length > maxLength)
                 return false;
 
-            string pattern = $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[{SpecialCharacters}])[^\s]{{{maxLength}}}$";
+            string pattern = $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[{Regex.Escape(SpecialCharacters)}]).{{{maxLength}}}$";
 
             return Regex.IsMatch(input, pattern);
         }
